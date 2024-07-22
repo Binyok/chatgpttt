@@ -10,32 +10,39 @@ body {
 
 .container {
     text-align: center;
+    max-width: 100%;
+    padding: 0 10px; /* Menambahkan padding untuk tampilan yang lebih baik pada perangkat seluler */
 }
 
 #puzzle-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Ukuran grid 3x3 */
+    grid-template-columns: repeat(4, 1fr); /* Mengatur grid 4 kolom untuk 4x4 puzzle */
     grid-gap: 2px;
     margin: 20px auto;
     border: 2px solid #000;
-    width: 400px; /* Lebar kontainer */
-    height: 400px; /* Tinggi kontainer */
-    max-width: 100%; /* Maksimum lebar sesuai viewport */
-    max-height: 100%; /* Maksimum tinggi sesuai viewport */
-    overflow: hidden; /* Mengatasi masalah potongan gambar di luar kotak */
-    touch-action: none; /* Mencegah aksi default sentuhan untuk memperbaiki perilaku swipe */
+    width: 400px;
+    height: 400px;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    touch-action: none;
 }
 
 .puzzle-piece {
-    width: 133px; /* Ukuran potongan puzzle yang lebih besar */
-    height: 133px; /* Ukuran potongan puzzle yang lebih besar */
-    background-size: 400px 400px; /* Ukuran background gambar */
+    width: 100px; /* Ukuran potongan puzzle */
+    height: 100px; /* Ukuran potongan puzzle */
+    background-size: 400px 400px; /* Ukuran total gambar puzzle */
     cursor: pointer;
     border: 1px solid #000;
-    transition: transform 0.2s ease-in-out; /* Transisi untuk efek transformasi */
+    transition: transform 0.2s ease-in-out;
 }
 
 button {
     padding: 10px 20px;
     font-size: 16px;
+    margin-top: 10px; /* Menambahkan margin atas untuk tampilan yang lebih baik pada perangkat seluler */
+}
+
+#timer {
+    margin-bottom: 10px; /* Menambahkan margin bawah untuk tampilan yang lebih baik pada perangkat seluler */
 }
