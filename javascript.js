@@ -1,13 +1,32 @@
 const puzzleContainer = document.getElementById('puzzle-container');
 const shuffleButton = document.getElementById('shuffle-button');
+const startButton = document.getElementById('start-button');
 let pieces = [];
 
 const imgSrc = 'gambar1.jpg'; // Ganti dengan path ke gambar Anda
 const gridSize = 4;
 const totalPieces = gridSize * gridSize;
 const pieceSize = 100; // Ukuran potongan puzzle
+let username = '';
 
-let startX, startY, currentX, currentY;
+startButton.addEventListener('click', () => {
+    username = document.getElementById('username').value.trim();
+    if (username === '') {
+        alert('Silakan masukkan nama Anda untuk memulai puzzle.');
+        return;
+    }
+    startPuzzle();
+});
+
+function startPuzzle() {
+    // Kosongkan kontainer puzzle sebelum memulai baru
+    puzzleContainer.innerHTML = '';
+    pieces = [];
+
+    // Lanjutkan dengan logika puzzle seperti sebelumnya
+    createPuzzlePieces();
+    renderPuzzle();
+}
 
 function createPuzzlePieces() {
     for (let i = 0; i < totalPieces - 1; i++) {
@@ -115,6 +134,3 @@ function isValidMove(targetIndex, emptyIndex) {
 }
 
 shuffleButton.addEventListener('click', shufflePuzzle);
-
-createPuzzlePieces();
-renderPuzzle();
