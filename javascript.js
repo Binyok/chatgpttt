@@ -3,26 +3,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const shuffleButton = document.getElementById('shuffle-button');
     const startButton = document.getElementById('start-button');
     const timerDisplay = document.getElementById('timer');
-    const usernameInput = document.getElementById('username');
     let pieces = [];
     let username = ''; // Variabel untuk menyimpan nama pengguna
     let timer; // Variabel untuk menyimpan ID timer
     let timeLeft = 60; // Waktu dalam detik
 
     const imgSrc = 'gambar2.jpg'; // Ganti dengan path ke gambar Anda
-    const gridSize = 3; // Ukuran grid menjadi 3x3
-    const totalPieces = gridSize * gridSize - 1; // Mengurangi jumlah potongan puzzle
-    const pieceSize = 133; // Ukuran potongan puzzle yang lebih besar
+    const gridSize = 4;
+    const totalPieces = gridSize * gridSize;
+    const pieceSize = 100; // Ukuran potongan puzzle
     const timeLimit = timeLeft * 1000; // Waktu limit dalam milidetik
 
     startButton.addEventListener('click', () => {
-        username = usernameInput.value.trim();
+        username = document.getElementById('username').value.trim();
         if (username === '') {
             alert('Silakan masukkan nama Anda untuk memulai puzzle.');
             return;
         }
         startPuzzle();
-        usernameInput.disabled = true; // Menonaktifkan input nama setelah mulai
     });
 
     function startPuzzle() {
@@ -35,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function createPuzzlePieces() {
-        for (let i = 0; i < totalPieces; i++) {
+        for (let i = 0; i < totalPieces - 1; i++) {
             const piece = document.createElement('div');
             piece.classList.add('puzzle-piece');
             piece.style.backgroundImage = `url(${imgSrc})`;
@@ -60,11 +58,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function shufflePuzzle() {
         do {
-            // Pengacakan sederhana untuk pertukaran antara dua potongan acak
-            for (let i = 0; i < pieces.length - 2; i++) {
-                const j = Math.floor(Math.random() * (pieces.length - 1));
+            // Fisher-Yates Shuffle untuk mengacak potongan puzzle
+            for (let i = pieces.length - 2; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
                 [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
             }
+            // Periksa solvability
         } while (!isSolvable());
     }
 
@@ -196,4 +195,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const seconds = timeLeft % 60;
         timerDisplay.textContent = `Waktu: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
+
+    shuffleButton.addEventListener('click', startPuzzle);
 });
