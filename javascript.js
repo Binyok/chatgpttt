@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let timer; // Variabel untuk menyimpan ID timer
     let timeLeft = 60; // Waktu dalam detik
 
-    const imgSrc = 'gambar2.jpg'; // Ganti dengan path ke gambar Anda
+    const imgSrc = 'gambar1.jpg'; // Ganti dengan path ke gambar Anda
     const gridSize = 4;
     const totalPieces = gridSize * gridSize;
     const pieceSize = 100; // Ukuran potongan puzzle
