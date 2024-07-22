@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    text-align: center;
+}
+
+#puzzle-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Menggunakan fr (fraction) untuk fleksibilitas lebar kolom */
+    grid-gap: 2px;
+    margin: 20px auto;
+    border: 2px solid #000;
+    width: 404px; /* Lebar kontainer */
+    height: 404px; /* Tinggi kontainer */
+    max-width: 100%; /* Maksimum lebar sesuai viewport */
+    max-height: 100%; /* Maksimum tinggi sesuai viewport */
+    overflow: hidden; /* Mengatasi masalah potongan gambar di luar kotak */
+    touch-action: none; /* Mencegah aksi default sentuhan untuk memperbaiki perilaku swipe */
+}
+
+.puzzle-piece {
+    width: 100px;
+    height: 100px;
+    background-size: 400px 400px; /* Ukuran background gambar */
+    cursor: pointer;
+    border: 1px solid #000;
+    transition: transform 0.2s ease-in-out; /* Transisi untuk efek transformasi */
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+}
