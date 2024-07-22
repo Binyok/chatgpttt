@@ -3,13 +3,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const shuffleButton = document.getElementById('shuffle-button');
     const startButton = document.getElementById('start-button');
     let pieces = [];
-    let isSolvable = false; // Flag untuk menandai puzzle yang bisa diselesaikan
+    let username = ''; // Variabel untuk menyimpan nama pengguna
+    let timer; // Variabel untuk menyimpan ID timer
 
     const imgSrc = 'gambar1.jpg'; // Ganti dengan path ke gambar Anda
     const gridSize = 4;
     const totalPieces = gridSize * gridSize;
     const pieceSize = 100; // Ukuran potongan puzzle
-    let username = '';
+    const timeLimit = 60 * 1000; // 1 menit dalam milidetik
 
     startButton.addEventListener('click', () => {
         username = document.getElementById('username').value.trim();
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
         createPuzzlePieces();
         shufflePuzzle();
         renderPuzzle();
+        startTimer();
     }
 
     function createPuzzlePieces() {
@@ -60,11 +62,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
             }
             // Periksa solvability
-            isSolvable = checkSolvability();
-        } while (!isSolvable);
+        } while (!isSolvable());
     }
 
-    function checkSolvability() {
+    function isSolvable() {
         let inversions = 0;
         const piecesOrder = pieces.map(piece => parseInt(piece.getAttribute('data-index')));
         const len = piecesOrder.length;
@@ -140,7 +141,8 @@ document.addEventListener('DOMContentLoaded', function() {
             [pieces[targetIndex], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[targetIndex]];
             renderPuzzle();
             if (isPuzzleCompleted()) {
-                alert(`Selamat ${username} telah menyelesaikan puzzle!`);
+                clearTimeout(timer); // Hentikan timer jika puzzle selesai
+                alert(`Selamat ${username} telah menyelesaikan puzzle dalam waktu yang ditentukan!`);
             }
         }
     }
@@ -170,6 +172,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         return true;
+    }
+
+    function startTimer() {
+        timer = setTimeout(() => {
+            if (!isPuzzleCompleted()) {
+                alert(`Maaf ${username}, Anda gagal menyelesaikan puzzle dalam waktu yang ditentukan.`);
+            }
+        }, timeLimit);
     }
 
     shuffleButton.addEventListener('click', startPuzzle);
