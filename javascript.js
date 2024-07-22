@@ -7,6 +7,8 @@ const gridSize = 4;
 const totalPieces = gridSize * gridSize;
 const pieceSize = 100; // Ukuran potongan puzzle
 
+let startX, startY;
+
 function createPuzzlePieces() {
     for (let i = 0; i < totalPieces - 1; i++) { // Kurangi satu potongan untuk potongan yang kosong
         const piece = document.createElement('div');
@@ -17,7 +19,9 @@ function createPuzzlePieces() {
         piece.style.top = `${Math.floor(i / gridSize) * pieceSize}px`;
         piece.setAttribute('data-index', i);
 
-        piece.addEventListener('click', () => movePiece(piece));
+        piece.addEventListener('touchstart', handleTouchStart);
+        piece.addEventListener('touchmove', handleTouchMove);
+        piece.addEventListener('touchend', handleTouchEnd);
 
         pieces.push(piece);
         puzzleContainer.appendChild(piece);
@@ -43,16 +47,55 @@ function renderPuzzle() {
     pieces.forEach(piece => puzzleContainer.appendChild(piece)); // Tambahkan kembali potongan-potongan sesuai urutan acak
 }
 
-function movePiece(piece) {
-    const emptyPiece = pieces.find(p => p.classList.contains('empty'));
+function handleTouchStart(event) {
+    event.preventDefault(); // Mencegah perilaku bawaan sentuhan
+    startX = event.touches[0].clientX; // Simpan posisi awal X
+    startY = event.touches[0].clientY; // Simpan posisi awal Y
+}
+
+function handleTouchMove(event) {
+    event.preventDefault(); // Mencegah perilaku bawaan sentuhan
+    // Memastikan sentuhan dimulai pada potongan puzzle
+    if (event.target.classList.contains('puzzle-piece')) {
+        const piece = event.target;
+        const currentIndex = pieces.indexOf(piece);
+        const emptyPiece = pieces.find(p => p.classList.contains('empty'));
+        const emptyIndex = pieces.indexOf(emptyPiece);
+
+        // Menghitung pergeseran sentuhan
+        const deltaX = event.touches[0].clientX - startX;
+        const deltaY = event.touches[0].clientY - startY;
+
+        // Menentukan arah swipe berdasarkan pergeseran
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal swipe
+            if (deltaX > 0 && isValidMove(currentIndex, emptyIndex - 1)) {
+                movePiece(piece, emptyPiece);
+            } else if (deltaX < 0 && isValidMove(currentIndex, emptyIndex + 1)) {
+                movePiece(piece, emptyPiece);
+            }
+        } else {
+            // Vertical swipe
+            if (deltaY > 0 && isValidMove(currentIndex, emptyIndex - gridSize)) {
+                movePiece(piece, emptyPiece);
+            } else if (deltaY < 0 && isValidMove(currentIndex, emptyIndex + gridSize)) {
+                movePiece(piece, emptyPiece);
+            }
+        }
+    }
+}
+
+function handleTouchEnd(event) {
+    event.preventDefault(); // Mencegah perilaku bawaan sentuhan
+    renderPuzzle();
+}
+
+function movePiece(piece, emptyPiece) {
     const currentIndex = pieces.indexOf(piece);
     const emptyIndex = pieces.indexOf(emptyPiece);
 
-    if (isValidMove(currentIndex, emptyIndex)) {
-        // Tukar posisi potongan puzzle
-        [pieces[currentIndex], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[currentIndex]];
-        renderPuzzle();
-    }
+    // Tukar posisi potongan puzzle
+    [pieces[currentIndex], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[currentIndex]];
 }
 
 function isValidMove(currentIndex, emptyIndex) {
