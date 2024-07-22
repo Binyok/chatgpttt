@@ -7,10 +7,10 @@ const gridSize = 4;
 const totalPieces = gridSize * gridSize;
 const pieceSize = 100; // Ukuran potongan puzzle
 
-let startX, startY;
+let startX, startY, currentX, currentY;
 
 function createPuzzlePieces() {
-    for (let i = 0; i < totalPieces - 1; i++) { // Kurangi satu potongan untuk potongan yang kosong
+    for (let i = 0; i < totalPieces - 1; i++) {
         const piece = document.createElement('div');
         piece.classList.add('puzzle-piece');
         piece.style.backgroundImage = `url(${imgSrc})`;
@@ -27,7 +27,6 @@ function createPuzzlePieces() {
         puzzleContainer.appendChild(piece);
     }
 
-    // Tambahkan potongan kosong sebagai potongan terakhir
     const emptyPiece = document.createElement('div');
     emptyPiece.classList.add('puzzle-piece', 'empty');
     pieces.push(emptyPiece);
@@ -35,7 +34,7 @@ function createPuzzlePieces() {
 }
 
 function shufflePuzzle() {
-    for (let i = pieces.length - 2; i > 0; i--) { // Kurangi satu potongan untuk potongan yang kosong
+    for (let i = pieces.length - 2; i > 0; i--) {
         const j = Math.floor(Math.random() * i);
         [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
     }
@@ -43,72 +42,75 @@ function shufflePuzzle() {
 }
 
 function renderPuzzle() {
-    puzzleContainer.innerHTML = ''; // Kosongkan kontainer puzzle
-    pieces.forEach(piece => puzzleContainer.appendChild(piece)); // Tambahkan kembali potongan-potongan sesuai urutan acak
+    puzzleContainer.innerHTML = '';
+    pieces.forEach(piece => puzzleContainer.appendChild(piece));
 }
 
 function handleTouchStart(event) {
-    event.preventDefault(); // Mencegah perilaku bawaan sentuhan
-    startX = event.touches[0].clientX; // Simpan posisi awal X
-    startY = event.touches[0].clientY; // Simpan posisi awal Y
+    event.preventDefault();
+    startX = event.touches[0].clientX;
+    startY = event.touches[0].clientY;
+    currentX = startX;
+    currentY = startY;
 }
 
 function handleTouchMove(event) {
-    event.preventDefault(); // Mencegah perilaku bawaan sentuhan
-    // Memastikan sentuhan dimulai pada potongan puzzle
-    if (event.target.classList.contains('puzzle-piece')) {
-        const piece = event.target;
-        const currentIndex = pieces.indexOf(piece);
-        const emptyPiece = pieces.find(p => p.classList.contains('empty'));
-        const emptyIndex = pieces.indexOf(emptyPiece);
-
-        // Menghitung pergeseran sentuhan
-        const deltaX = event.touches[0].clientX - startX;
-        const deltaY = event.touches[0].clientY - startY;
-
-        // Menentukan arah swipe berdasarkan pergeseran
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            // Horizontal swipe
-            if (deltaX > 0 && isValidMove(currentIndex, emptyIndex - 1)) {
-                movePiece(piece, emptyPiece);
-            } else if (deltaX < 0 && isValidMove(currentIndex, emptyIndex + 1)) {
-                movePiece(piece, emptyPiece);
-            }
-        } else {
-            // Vertical swipe
-            if (deltaY > 0 && isValidMove(currentIndex, emptyIndex - gridSize)) {
-                movePiece(piece, emptyPiece);
-            } else if (deltaY < 0 && isValidMove(currentIndex, emptyIndex + gridSize)) {
-                movePiece(piece, emptyPiece);
-            }
-        }
-    }
+    event.preventDefault();
+    currentX = event.touches[0].clientX;
+    currentY = event.touches[0].clientY;
 }
 
 function handleTouchEnd(event) {
-    event.preventDefault(); // Mencegah perilaku bawaan sentuhan
-    renderPuzzle();
+    event.preventDefault();
+    const deltaX = currentX - startX;
+    const deltaY = currentY - startY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 0) movePiece('right');
+        else movePiece('left');
+    } else {
+        if (deltaY > 0) movePiece('down');
+        else movePiece('up');
+    }
 }
 
-function movePiece(piece, emptyPiece) {
-    const currentIndex = pieces.indexOf(piece);
+function movePiece(direction) {
+    const emptyPiece = pieces.find(p => p.classList.contains('empty'));
     const emptyIndex = pieces.indexOf(emptyPiece);
 
-    // Tukar posisi potongan puzzle
-    [pieces[currentIndex], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[currentIndex]];
+    let targetIndex;
+    switch (direction) {
+        case 'up':
+            targetIndex = emptyIndex + gridSize;
+            break;
+        case 'down':
+            targetIndex = emptyIndex - gridSize;
+            break;
+        case 'left':
+            targetIndex = emptyIndex + 1;
+            break;
+        case 'right':
+            targetIndex = emptyIndex - 1;
+            break;
+        default:
+            return;
+    }
+
+    if (isValidMove(targetIndex, emptyIndex)) {
+        [pieces[targetIndex], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[targetIndex]];
+        renderPuzzle();
+    }
 }
 
-function isValidMove(currentIndex, emptyIndex) {
-    // Mendapatkan koordinat baris dan kolom untuk potongan puzzle
-    const currentRow = Math.floor(currentIndex / gridSize);
-    const currentCol = currentIndex % gridSize;
+function isValidMove(targetIndex, emptyIndex) {
+    const currentRow = Math.floor(targetIndex / gridSize);
+    const currentCol = targetIndex % gridSize;
     const emptyRow = Math.floor(emptyIndex / gridSize);
     const emptyCol = emptyIndex % gridSize;
 
-    // Memeriksa apakah potongan puzzle dapat digerakkan ke potongan kosong
     return (
-        (currentRow === emptyRow && Math.abs(currentCol - emptyCol) === 1) || // Bergerak horizontal
-        (currentCol === emptyCol && Math.abs(currentRow - emptyRow) === 1) // Bergerak vertikal
+        (currentRow === emptyRow && Math.abs(currentCol - emptyCol) === 1) ||
+        (currentCol === emptyCol && Math.abs(currentRow - emptyRow) === 1)
     );
 }
 
