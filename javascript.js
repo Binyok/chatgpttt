@@ -1,14 +1,18 @@
+// javascript.js
+
 document.addEventListener('DOMContentLoaded', function() {
     const puzzleContainer = document.getElementById('puzzle-container');
     const shuffleButton = document.getElementById('shuffle-button');
     const startButton = document.getElementById('start-button');
     const timerDisplay = document.getElementById('timer');
+    const jumpscareImg = document.getElementById('jumpscare-img');
+    const jumpscareSound = document.getElementById('jumpscare-sound');
     let pieces = [];
     let username = ''; // Variabel untuk menyimpan nama pengguna
     let timer; // Variabel untuk menyimpan ID timer
     let timeLeft = 60; // Waktu dalam detik
 
-    const imgSrc = 'gambar2.jpg'; // Ganti dengan path ke gambar Anda
+    const imgSrc = 'gambar1.jpg'; // Ganti dengan path ke gambar Anda
     const gridSize = 4;
     const totalPieces = gridSize * gridSize;
     const pieceSize = 100; // Ukuran potongan puzzle
@@ -88,6 +92,8 @@ document.addEventListener('DOMContentLoaded', function() {
         puzzleContainer.innerHTML = '';
         pieces.forEach(piece => puzzleContainer.appendChild(piece));
     }
+
+    let startX, startY, currentX, currentY;
 
     function handleTouchStart(event) {
         event.preventDefault();
@@ -184,7 +190,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (timeLeft === 0) {
                 clearInterval(timer);
                 if (!isPuzzleCompleted()) {
-                    alert(`Maaf ${username}, Anda gagal menyelesaikan puzzle dalam waktu yang ditentukan.`);
+                    // Tampilkan gambar jumpscare
+                    jumpscareImg.style.display = 'block';
+                    // Mainkan sound effect jumpscare
+                    jumpscareSound.play();
+                    // Tampilkan pesan alert setelah beberapa detik
+                    setTimeout(() => {
+                        alert(`Maaf ${username}, Anda gagal menyelesaikan puzzle dalam waktu yang ditentukan.`);
+                    }, 200);
                 }
             }
         }, 1000); // Update setiap 1 detik
