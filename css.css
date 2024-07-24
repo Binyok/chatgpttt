@@ -1,3 +1,5 @@
+/* css.css */
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -45,4 +47,19 @@ button {
 
 #timer {
     margin-bottom: 10px; /* Menambahkan margin bawah untuk tampilan yang lebih baik pada perangkat seluler */
+}
+
+.jumpscare {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 9999;
+    display: none;
+}
+
+.hidden {
+    display: none;
 }
