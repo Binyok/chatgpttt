@@ -61,3 +61,18 @@ button {
 .hidden {
     display: none;
 }
+
+.navbar-item ul li a{
+    transition: 1s ease-in-out;
+}
+.ul{
+    justify-content: center;
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+a{
+    text-decoration: none;
+    color: rgb(0, 0, 0) ;
+}
