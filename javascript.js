@@ -1,5 +1,3 @@
-// javascript.js
-
 document.addEventListener('DOMContentLoaded', function() {
     const puzzleContainer = document.getElementById('puzzle-container');
     const shuffleButton = document.getElementById('shuffle-button');
@@ -12,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let timer; // Variabel untuk menyimpan ID timer
     let timeLeft = 60; // Waktu dalam detik
 
-    const imgSrc = 'gambar1.jpg'; // Ganti dengan path ke gambar Anda
-    const gridSize = 4;
+    const imgSrc = 'gambar2.jpg'; // Ganti dengan path ke gambar Anda
+    const gridSize = 3;
     const totalPieces = gridSize * gridSize;
     const pieceSize = 100; // Ukuran potongan puzzle
     const timeLimit = timeLeft * 1000; // Waktu limit dalam milidetik
